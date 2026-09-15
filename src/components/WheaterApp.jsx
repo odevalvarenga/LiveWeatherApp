@@ -1,4 +1,4 @@
-import sunny from '../assets/images/sunny.png'
+import sunny from '../assets/sunny.png'
 
 const WheatherApp = () => {
   return (
