@@ -6,6 +6,16 @@ const WheatherApp = () => {
   const handleInputChanges = (e) => {
   setLocation(e.target.value)
 }
+
+const handleKeyDown = (e) => {
+  if (e.key === 'Enter') {
+    search(location)
+  }
+}
+ const search =(city) => {
+  console.log('Searching for:' , city)
+ }
+
   return (
     <div className="container">
       <div className="weather-app">
@@ -21,7 +31,9 @@ const WheatherApp = () => {
               placeholder="Enter Location"
               value={location}
               onChange={handleInputChanges}
+              onKeyDown={handleKeyDown}
             />
+          
             <i className="fa-solid fa-magnifying-glass"></i>
           </div>
         </div>
