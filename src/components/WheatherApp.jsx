@@ -22,9 +22,9 @@ const WheatherApp = () => {
     }
   }
 
-  const search = (city) => {
-    console.log('Searching for:', city)
-  }
+  //const search = (city) => {
+  //  console.log('Searching for:', city)
+  //}
 
   const getCoordinates = async (city) => {
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
@@ -78,6 +78,39 @@ const WheatherApp = () => {
   //  latitude: -23.5475,
   //  longitude: -46.63611
   //}).then(console.log)
+
+  const search = async (city) => {
+  const normalizedCity = city.trim()
+
+  if (!normalizedCity) {
+    return
+  }
+
+  try {
+    const coordinates = await getCoordinates(normalizedCity)
+
+    if (!coordinates) {
+      console.log('City not found')
+      return
+    }
+
+    const currentWeather = await getWeather(coordinates)
+
+    setData({
+      city: coordinates.name,
+      country: coordinates.country,
+      temperature: currentWeather.temperature_2m,
+      humidity: currentWeather.relative_humidity_2m,
+      windSpeed: currentWeather.wind_speed_10m,
+      weatherCode: currentWeather.weather_code,
+      time: currentWeather.time
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+console.log(data)
 
   return (
     <div className="container">
