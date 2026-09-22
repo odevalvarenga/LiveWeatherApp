@@ -1,10 +1,14 @@
 import sunny from '../assets/sunny.png'
 import { useState } from 'react'
-import { getWeatherInfo } from '../utils/weatherCode'
+import { getWeatherInfo } from '../utils/wheatherCode'
 
 const WheatherApp = () => {
   const [location, setLocation] = useState('')
   const [data, setData] = useState(null)
+
+//console.log(getWeatherInfo(0))
+//console.log(getWeatherInfo(63))
+//console.log(getWeatherInfo(75))
 
  // console.log(data)
 
