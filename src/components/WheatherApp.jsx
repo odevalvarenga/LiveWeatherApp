@@ -1,5 +1,8 @@
-import sunny from '../assets/sunny.png'
 import { useState } from 'react'
+import sunny from '../assets/sunny.png'
+import cloudy from '../assets/cloudy.png'
+import rainy from '../assets/rainy.png'
+import snowy from '../assets/snowy.png'
 import { getWeatherInfo } from '../utils/wheatherCode'
 
 const WheatherApp = () => {
@@ -99,109 +102,123 @@ const WheatherApp = () => {
     : null
 
   const formatDate = (dateTime) => {
-  if (!dateTime) {
-    return ''
+    if (!dateTime) {
+      return ''
+    }
+
+    const date = new Date(dateTime)
+
+    return new Intl.DateTimeFormat('pt-BR', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short'
+    }).format(date)
   }
 
-  const date = new Date(dateTime)
+  const weatherImages = {
+    sunny,
+    cloudy,
+    rainy,
+    snowy
+  }
 
-  return new Intl.DateTimeFormat('pt-BR', {
-    weekday: 'short',
-    day: '2-digit',
-    month: 'short'
-  }).format(date)
-}  
+  const weatherImage = weatherInfo
+    ? weatherImages[weatherInfo.type] || sunny
+    : sunny
 
   return (
-  <div className="container">
-    <div className="weather-app">
+    <div className="container">
+      <div className="weather-app">
 
-      <div className="search">
-        <div className="search-top">
-          <i className="fa-solid fa-location-dot"></i>
+        <div className="search">
+          <div className="search-top">
+            <i className="fa-solid fa-location-dot"></i>
 
-          <div className="location">
-            {data ? data.city : 'London'}
+            <div className="location">
+              {data ? data.city : 'London'}
+            </div>
+          </div>
+
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Enter Location"
+              value={location}
+              onChange={handleInputChanges}
+              onKeyDown={handleKeyDown}
+            />
+
+            <i
+              className="fa-solid fa-magnifying-glass"
+              onClick={() => search(location)}
+            ></i>
           </div>
         </div>
 
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Enter Location"
-            value={location}
-            onChange={handleInputChanges}
-            onKeyDown={handleKeyDown}
+        <div className="weather">
+
+          <img
+            src={weatherImage}
+            alt={weatherInfo?.description || 'Weather'}
           />
 
-          <i
-            className="fa-solid fa-magnifying-glass"
-            onClick={() => search(location)}
-          ></i>
-        </div>
-      </div>
-
-      <div className="weather">
-        <img
-          src={sunny}
-          alt="Clear sky"
-        />
-
-        <div className="weather-type">
-          {weatherInfo
-            ? weatherInfo.description
-            : 'Clear'}
-        </div>
-
-        <div className="temp">
-          {data
-            ? `${Math.round(data.temperature)}°`
-            : '28°'}
-        </div>
-      </div>
-
-      {/* DATA FORMATADA */}
-      <div className="weather-date">
-        <p>
-          {data ? formatDate(data.time) : 'Sat, 15 Ago'}
-        </p>
-      </div>
-
-      <div className="weather-data">
-
-        <div className="humidity">
-          <div className="data-name">
-            Humidity
+          <div className="weather-type">
+            {weatherInfo
+              ? weatherInfo.description
+              : 'Clear'}
           </div>
 
-          <i className="fa-solid fa-droplet"></i>
-
-          <div className="data">
+          <div className="temp">
             {data
-              ? `${data.humidity}%`
-              : '35%'}
+              ? `${Math.round(data.temperature)}°`
+              : '28°'}
           </div>
+
         </div>
 
-        <div className="wind">
-          <div className="data-name">
-            Wind
-          </div>
-
-          <i className="fa-solid fa-wind"></i>
-
-          <div className="data">
+        <div className="weather-date">
+          <p>
             {data
-              ? `${data.windSpeed} km/h`
-              : '3 km/h'}
+              ? formatDate(data.time)
+              : 'Sat, 15 Ago'}
+          </p>
+        </div>
+
+        <div className="weather-data">
+
+          <div className="humidity">
+            <div className="data-name">
+              Humidity
+            </div>
+
+            <i className="fa-solid fa-droplet"></i>
+
+            <div className="data">
+              {data
+                ? `${data.humidity}%`
+                : '35%'}
+            </div>
           </div>
+
+          <div className="wind">
+            <div className="data-name">
+              Wind
+            </div>
+
+            <i className="fa-solid fa-wind"></i>
+
+            <div className="data">
+              {data
+                ? `${data.windSpeed} km/h`
+                : '3 km/h'}
+            </div>
+          </div>
+
         </div>
 
       </div>
-
     </div>
-  </div>
-)
+  )
 }
 
 export default WheatherApp
