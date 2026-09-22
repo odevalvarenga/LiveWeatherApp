@@ -34,7 +34,10 @@ const handleKeyDown = (e) => {
               onKeyDown={handleKeyDown}
             />
           
-            <i className="fa-solid fa-magnifying-glass"></i>
+            <i
+              className="fa-solid fa-magnifying-glass"
+              onClick={() => search(location)}
+            ></i>
           </div>
         </div>
 
