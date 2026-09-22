@@ -1,6 +1,6 @@
 import sunny from '../assets/sunny.png'
 import { useState } from 'react'
-import { getWeatherInfo } from '../utils/wheatherCode'
+import { getWeatherInfo } from '../utils/wheatherCode'  
 
 const WheatherApp = () => {
   const [location, setLocation] = useState('')
@@ -24,7 +24,32 @@ const handleKeyDown = (e) => {
  const search =(city) => {
   console.log('Searching for:' , city)
  }
+ const getCoordinates = async (city) => {
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
 
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch coordinates')
+  }
+
+  const result = await response.json()
+
+  if (!result.results || result.results.length === 0) {
+    return null
+  }
+
+  const place = result.results[0]
+
+  return {
+    name: place.name,
+    country: place.country,
+    latitude: place.latitude,
+    longitude: place.longitude
+  }
+}
+  getCoordinates('cidade-que-nao-existe-xyz').then(console.log)
+  //getCoordinates('São Paulo').then(console.log)
   return (
     <div className="container">
       <div className="weather-app">
