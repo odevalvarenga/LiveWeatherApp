@@ -6,12 +6,6 @@ const WheatherApp = () => {
   const [location, setLocation] = useState('')
   const [data, setData] = useState(null)
 
-  // console.log(getWeatherInfo(0))
-  // console.log(getWeatherInfo(63))
-  // console.log(getWeatherInfo(75))
-
-  // console.log(data)
-
   const handleInputChanges = (e) => {
     setLocation(e.target.value)
   }
@@ -21,10 +15,6 @@ const WheatherApp = () => {
       search(location)
     }
   }
-
-  //const search = (city) => {
-  //  console.log('Searching for:', city)
-  //}
 
   const getCoordinates = async (city) => {
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
@@ -73,52 +63,52 @@ const WheatherApp = () => {
     return result.current
   }
 
-  // TESTE TEMPORÁRIO DA TASK 11
-  //getWeather({
-  //  latitude: -23.5475,
-  //  longitude: -46.63611
-  //}).then(console.log)
-
   const search = async (city) => {
-  const normalizedCity = city.trim()
+    const normalizedCity = city.trim()
 
-  if (!normalizedCity) {
-    return
-  }
-
-  try {
-    const coordinates = await getCoordinates(normalizedCity)
-
-    if (!coordinates) {
-      console.log('City not found')
+    if (!normalizedCity) {
       return
     }
 
-    const currentWeather = await getWeather(coordinates)
+    try {
+      const coordinates = await getCoordinates(normalizedCity)
 
-    setData({
-      city: coordinates.name,
-      country: coordinates.country,
-      temperature: currentWeather.temperature_2m,
-      humidity: currentWeather.relative_humidity_2m,
-      windSpeed: currentWeather.wind_speed_10m,
-      weatherCode: currentWeather.weather_code,
-      time: currentWeather.time
-    })
-  } catch (error) {
-    console.error(error)
+      if (!coordinates) {
+        console.log('City not found')
+        return
+      }
+
+      const currentWeather = await getWeather(coordinates)
+
+      setData({
+        city: coordinates.name,
+        country: coordinates.country,
+        temperature: currentWeather.temperature_2m,
+        humidity: currentWeather.relative_humidity_2m,
+        windSpeed: currentWeather.wind_speed_10m,
+        weatherCode: currentWeather.weather_code,
+        time: currentWeather.time
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
-}
 
-console.log(data)
+  const weatherInfo = data
+    ? getWeatherInfo(data.weatherCode)
+    : null
 
   return (
     <div className="container">
       <div className="weather-app">
+
         <div className="search">
           <div className="search-top">
             <i className="fa-solid fa-location-dot"></i>
-            <div className="location">London</div>
+
+            <div className="location">
+              {data ? data.city : 'London'}
+            </div>
           </div>
 
           <div className="search-bar">
@@ -138,27 +128,62 @@ console.log(data)
         </div>
 
         <div className="weather">
-          <img src={sunny} alt="Clear sky" />
-          <div className="weather-type">Clear</div>
-          <div className="temp">28°</div>
+          <img
+            src={sunny}
+            alt="Clear sky"
+          />
+
+          <div className="weather-type">
+            {weatherInfo
+              ? weatherInfo.description
+              : 'Clear'}
+          </div>
+
+          <div className="temp">
+            {data
+              ? `${Math.round(data.temperature)}°`
+              : '28°'}
+          </div>
         </div>
 
         <div className="weather-date">
-          <p>Sat, 15 Ago</p>
+          <p>
+            {data
+              ? data.time
+              : 'Sat, 15 Ago'}
+          </p>
         </div>
 
         <div className="weather-data">
+
           <div className="humidity">
-            <div className="data-name">Humidity</div>
+            <div className="data-name">
+              Humidity
+            </div>
+
             <i className="fa-solid fa-droplet"></i>
-            <div className="data">35%</div>
+
+            <div className="data">
+              {data
+                ? `${data.humidity}%`
+                : '35%'}
+            </div>
           </div>
 
           <div className="wind">
-            <div className="data-name">Wind</div>
+            <div className="data-name">
+              Wind
+            </div>
+
             <i className="fa-solid fa-wind"></i>
-            <div className="data">3 km/h</div>
+
+            <div className="data">
+              {data
+                ? `${data.windSpeed} km/h`
+                : '3 km/h'}
+            </div>
           </div>
+
         </div>
       </div>
     </div>
